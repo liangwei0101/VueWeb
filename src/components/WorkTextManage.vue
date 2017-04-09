@@ -26,8 +26,8 @@
       <div class="content-frame-left" style="height: 100%">
         <div class="block" >
           <div class="list-group border-bottom">
-            <a class="list-group-item"><span class="fa fa-flag"></span>公文列表</a>
-            <a class="list-group-item" v-for="item in items" @click="showContent(item)"><span class="fa fa-file-o"></span>{{item.title + '---'+ item.createDateTime}}</a>
+            <a class="list-group-item active"><span class="fa fa-flag"></span> 公文列表</a>
+            <a class="list-group-item" v-for="item in items" @click="showContent(item)"><span class="fa fa-file-o"></span>{{item.title + '---'+ item.createDate}}</a>
           </div>
         </div>
         <div class="block">
@@ -118,6 +118,7 @@
   import Vue from 'vue'
   import VueResource from 'vue-resource'
   import { VueEditor } from 'vue2-editor'
+  import { getCookie } from '../services/Cookie'
   Vue.use(VueResource)
   Vue.use(VueEditor)
 
@@ -140,23 +141,24 @@
         textID: '',
         delClass: {
           open: false
-        }
+        },
+        Dic: {}
       }
     },
     components: {
       VueEditor
     },
     mounted: function () {
+      this.vueCookie()
       this.getContents()
       this.getDate()
-      this.getTime()
     },
     methods: {
       handleSaveContent: function (contentsToBeSaved) {
         this.saveContents(contentsToBeSaved)
       },
       getContents: function () {
-        var getUrl = 'http://localhost:3000/workText'
+        var getUrl = 'http://localhost:3000/workText' + '/' + this.Dic['userid']
         var resource = this.$resource(getUrl)
         resource.get()
           .then((response) => {
@@ -164,7 +166,8 @@
             if (this.items.length > 0) {
               var temp = this.items[0]
               this.title = temp.title
-              this.createDate = temp.createDateTime
+              this.createDate = temp.createDate
+              this.createTime = temp.createTime
               this.selected = temp.IsPublic
               this.htmlForEditor = temp.htmlForEditor
               this.author = temp.author
@@ -198,7 +201,8 @@
       },
       getTime: function () {
         var tempDate = new Date()
-        this.createTime = tempDate.toLocaleTimeString()
+        this.createTime = tempDate.getHours() + ':'
+        this.createTime += tempDate.getMinutes()
       },
       showContent: function (item) {
         console.log(item)
@@ -222,12 +226,15 @@
       },
       addContent: function (contentsToBeSaved) {
         this.textIdMake()
+        this.getTime()
         var Params = {IsPublic: this.selected,
           title: this.title,
           author: this.author,
           htmlForEditor: contentsToBeSaved,
-          createDateTime: this.createDate,
-          textID: this.textID
+          createDate: this.createDate,
+          textID: this.textID,
+          userid: this.Dic['userid'],
+          createTime: this.createTime
         }
         var saveUrl = 'http://localhost:3000/workText'
         var resource = this.$resource(saveUrl)
@@ -241,11 +248,23 @@
             this.getContents()
           })
       },
-      updateContent: function () {
-        this.$message({
-          message: '工作文档更新成功！',
-          type: 'success'
-        })
+      updateContent: function (contentsToBeSaved) {
+        var updateUrl = 'http://localhost:3000/workText' + '/' + this.textID
+        var Params = {IsPublic: this.selected,
+          title: this.title,
+          author: this.author,
+          htmlForEditor: contentsToBeSaved,
+          textID: this.textID
+        }
+        var resource = this.$resource(updateUrl)
+        resource.save(updateUrl, Params)
+          .then((response) => {
+            this.$message({
+              message: '工作文档更新成功！',
+              type: 'success'
+            })
+            this.getContents()
+          })
       },
       removeContent: function () {
         this.closeTipWind()
@@ -270,7 +289,7 @@
               message: '工作文档删除成功！',
               type: 'success'
             })
-            this.addContent()
+            this.clearContent()
           })
       },
       clearContent: function () {
@@ -279,6 +298,7 @@
         this.author = ''
         this.htmlForEditor = ''
         this.textID = ''
+        this.getDate()
       },
       closeTipWind: function () {
         this.delClass.open = false
@@ -293,6 +313,12 @@
         temp += myDate.getMinutes()
         temp += myDate.getSeconds()
         this.textID = temp
+      },
+      vueCookie: function () {
+        this.Dic = getCookie()
+        console.log('-------------------------')
+        console.log(this.Dic['userid'])
+        console.log('-------------------------')
       }
     }
   }

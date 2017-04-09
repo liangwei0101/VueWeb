@@ -448,12 +448,19 @@
         var resource = this.$resource(this.apiUrl)
         resource.save(this.apiUrl, Params)
           .then((response) => {
-            this.usersShow.push(Params)
+            if (this.usersShow.length < Number(this.selected)) {
+              this.usersShow.push(Params)
+              console.log('111111111')
+            } else {
+              this.users.push(Params)
+              console.log('22222222222')
+            }
             this.sendEmail(Params.userid)
             this.$message({
               message: '保存用户信息成功！',
               type: 'success'
             })
+            this.pageOne.totalItems++
           })
       },
       editUser: function () {

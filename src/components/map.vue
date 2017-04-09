@@ -1,17 +1,17 @@
 <template>
   <doc-preview>
-    <baidu-map slot="map" class="map" :scroll-wheel-zoom="true" :zoom="zoom" :events="events">
+    <baidu-map slot="map" class="map" :scroll-wheel-zoom="true" :center="{lng: 114.93590908, lat: 25.84529554}" :zoom="15" :events="events">
       <bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"/>
       <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT"/>
-      <bm-map-type :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']" anchor="BMAP_ANCHOR_TOP_LEFT"/>
       <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"/>
-      <bm-city-list anchor="BMAP_ANCHOR_BOTTOM_LEFT"/>
+      <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT"/>
       <bm-view style="position: absolute; top: 55px; bottom: 0px; left: 5px; right: 5px"></bm-view>
-      <bm-marker :position="{lng: 116.404, lat: 39.915}" :dragging="true" animation="BMAP_ANIMATION_BOUNCE" :label="{content: 'Marker Label', opts: {offset: {width: 20, height: -10}}}"></bm-marker>
+      <bm-marker :position="{lng: 114.93590908, lat: 25.84529554}" :dragging="true" animation="BMAP_ANIMATION_BOUNCE" :label="{content: 'Marker Label', opts: {offset: {width: 20, height: -10}}}"></bm-marker>
     </baidu-map>
   </doc-preview>
 </template>
 
+<script src="/static/js/easydialog.min.js" ></script>
 <script>
 import Vue from 'vue'
 import BaiduMap from 'vue-baidu-map'
@@ -23,23 +23,13 @@ Vue.use(BaiduMap, {
 export default {
   data () {
     return {
-      center: {lng: 0, lat: 0},
-      events: {
-        'locationSuccess': () => {
-          alert('我是定位成功')
-        },
-        'locationError': () => {
-          alert('我是定位失败')
-        },
-        'click': (e) => {
-          alert('map clicked')
-        }
-      }
+      center: {lng: 0, lat: 0}
     }
   },
   mounted () {
-    this.lng = 116.404
-    this.lat = 39.915
+    this.lng = 114.93590908
+    this.lat = 25.84529554
+    this.ts()
   },
   methods: {
     test () {
@@ -58,6 +48,13 @@ export default {
           alert('failed' + this.getStatus())
         }
       }, {enableHighAccuracy: true})
+    },
+    ts () {
+      var map = new BaiduMap.Map('container')
+      map.centerAndZoom(new BaiduMap.Point(116.404, 39.915), 11)
+      map.addEventListener('click', function () {
+        alert('您点击了地图。')
+      })
     }
   }
 }

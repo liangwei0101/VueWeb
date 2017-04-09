@@ -7,6 +7,8 @@ import UserManage from '@/components/userManage'
 import test from '@/components/test'
 import WorkTextManage from '@/components/WorkTextManage'
 import map from '@/components/map'
+import Login from '@/components/Login'
+import ShowWorkText from '@/components/ShowWorkText'
 
 Vue.use(Router)
 
@@ -46,6 +48,16 @@ export default new Router({
       path: '/map',
       name: 'map',
       component: map
+    },
+    {
+      path: '/Login',
+      name: 'Login',
+      component: Login
+    },
+    {
+      path: '/ShowWorkText',
+      name: 'ShowWorkText',
+      component: ShowWorkText
     }
   ]
 })
