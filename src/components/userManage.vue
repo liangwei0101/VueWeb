@@ -115,7 +115,7 @@
               <label class="pull-left" style="padding-left: 0px; padding-top:7px;vertical-align: middle;">总条数为：{{this.pageOne.totalItems}}条</label>
               <div class="col-md-1" style="float: left">
                 <select class="form-control select"  v-model="selected" @change="selectVal">
-                  <option v-for="option in options" v-bind:value="option.value">
+                  <option class="text-center" v-for="option in options" v-bind:value="option.value">
                     {{ option.text }}
                   </option>
                 </select>
