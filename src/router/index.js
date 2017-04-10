@@ -9,6 +9,7 @@ import WorkTextManage from '@/components/WorkTextManage'
 import map from '@/components/map'
 import Login from '@/components/Login'
 import ShowWorkText from '@/components/ShowWorkText'
+import RadioactiveInfo from '@/components/RadioactiveInfo'
 
 Vue.use(Router)
 
@@ -20,7 +21,7 @@ export default new Router({
       component: Hello
     },
     {
-      path: '/',
+      path: '/PublicPage',
       name: 'PublicPage',
       component: PublicPage
     },
@@ -50,7 +51,7 @@ export default new Router({
       component: map
     },
     {
-      path: '/Login',
+      path: '/',
       name: 'Login',
       component: Login
     },
@@ -58,6 +59,11 @@ export default new Router({
       path: '/ShowWorkText',
       name: 'ShowWorkText',
       component: ShowWorkText
+    },
+    {
+      path: '/RadioactiveInfo',
+      name: 'RadioactiveInfo',
+      component: RadioactiveInfo
     }
   ]
 })
