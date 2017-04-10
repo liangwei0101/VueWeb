@@ -1,55 +1,45 @@
 <template>
   <div>
-  <!-- START BREADCRUMB -->
-  <ul class="breadcrumb">
-    <li><a>主页</a></li>
-    <li><a>用户管理</a></li>
-    <li class="active">用户登入</li>
-  </ul>
-  <!-- END BREADCRUMB -->
+    <div class="login-container dialog">
 
-  <!-- PAGE TITLE -->
-  <div class="page-title">
-    <h2><span class="fa fa-arrow-circle-o-left"></span> Form Elements</h2>
-  </div>
-  <!-- END PAGE TITLE -->
-
-    <!-- PAGE CONTENT WRAPPER -->
-    <div class="page-content-wrap">
-
-      <div class="row">
-        <div class="col-md-6">
-
-          <!-- START DEFAULT FORM ELEMENTS -->
-          <div class="block">
-            <h4>模拟登入界面数据</h4>
-            <form class="form-horizontal" role="form">
-              <div class="form-group">
-                <label class="col-md-2 control-label">账号</label>
-                <div class="col-md-10">
-                  <input type="text" class="form-control" placeholder="请输入账号" v-model="userid" />
-                </div>
+      <div class="login-box animated fadeInDown">
+        <div class="login-logo"></div>
+        <div class="login-body">
+          <div class="login-title"><strong>欢迎</strong>, 请 登入</div>
+          <form class="form-horizontal">
+            <div class="form-group">
+              <div class="col-md-12">
+                <input type="text" class="form-control" placeholder="请输入账号"  v-model="userid" />
               </div>
-              <div class="form-group">
-                <label class="col-md-2 control-label">密码</label>
-                <div class="col-md-10">
-                  <input type="password" class="form-control" placeholder="密码" v-model="password" />
-                </div>
+            </div>
+            <div class="form-group">
+              <div class="col-md-12">
+                <input type="password" class="form-control" placeholder="密码" v-model="password" />
               </div>
-              <div class="form-group">
-                <button type="submit" @click="submitForm" class="btn btn-danger col-md-offset-6">Sign in</button>
+            </div>
+            <div class="form-group">
+              <div class="col-md-6">
+                <a href="#" class="btn btn-link btn-block">忘记密码了?</a>
               </div>
-            </form>
-          </div>
-          <!-- END DEFAULT FORM ELEMENTS -->
-
+              <div class="col-md-6">
+                <button class="btn btn-info btn-block"  @click="submitForm">登入</button>
+              </div>
+            </div>
+          </form>
         </div>
-
+        <div class="login-footer">
+          <div class="pull-left">
+            &copy; 2017 梁伟
+                    </div>
+          <div class="pull-right">
+            <a href="#">About</a> |
+                        <a href="#">Privacy</a> |
+                        <a href="#">Contact Us</a>
+          </div>
+        </div>
       </div>
 
     </div>
-    <!-- END PAGE CONTENT WRAPPER -->
-
   </div>
 </template>
 
@@ -97,6 +87,7 @@
               Info += 'name' + '=' + response.body.name + '&'
               Info += 'email' + '=' + response.body.email
               Vue.cookie.set('userInfo', Info, { expires: '1D' })
+              this.$router.push('/PublicPage')
             }
           })
       }
@@ -105,5 +96,14 @@
 </script>
 
 <style>
-
+  .dialog{
+    padding-top: 120px;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: #1b1e24;
+    z-index: 999;
+  }
 </style>
