@@ -10,6 +10,7 @@ import map from '@/components/map'
 import Login from '@/components/Login'
 import ShowWorkText from '@/components/ShowWorkText'
 import RadioactiveInfo from '@/components/RadioactiveInfo'
+import TransportTask from '@/components/TransportTask'
 
 Vue.use(Router)
 
@@ -64,6 +65,11 @@ export default new Router({
       path: '/RadioactiveInfo',
       name: 'RadioactiveInfo',
       component: RadioactiveInfo
+    },
+    {
+      path: '/TransportTask',
+      name: 'TransportTask',
+      component: TransportTask
     }
   ]
 })

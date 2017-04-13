@@ -63,7 +63,6 @@
         var Params = {userid: this.userid,
           pass: this.password
         }
-        console.log(Params)
         var resource = this.$resource(this.LoginUrl)
         resource.save(this.apiUrl, Params)
           .then((response) => {
@@ -90,6 +89,7 @@
               this.$router.push('/PublicPage')
             }
           })
+        this.$router.push('/PublicPage')
       }
     }
   }

@@ -1,83 +1,63 @@
 <template>
-  <div class="hello">
-    <button class="btn btn-success" @click="addDialogShow"><i class="fa fa-bars"></i> 新 增</button>
-    <!-- START MODAL ICON PREVIEW -->
-    <div :class="isAbleShowClass" id="iconPreview" role="dialog" tabindex="-1"  aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" @click="addDialogClose"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title">我是标题</h4>
+
+    <form @submit.prevent="validateForm('form-1')" data-vv-scope="form-1">
+      <legend>Form 1</legend>
+
+
+          <input name="email" v-validate="'required|email'" :class="{'input': true, 'is-danger': errors.has('form-1.email') }" type="text" placeholder="Email">
+          <div>
+          <i v-show="errors.has('form-1.email')" class="fa fa-warning"></i>
+          <span v-show="errors.has('form-1.email')" class="help is-danger">{{ errors.first('form-1.email') }}</span>
           </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="icon-preview"></div>
-              </div>
-              <div class="col-md-12">
-                <form class="form-horizontal" role="form">
-                  <div class="form-group">
-                    <label class="col-md-2 control-label">Text</label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" value="Some text value..."/>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-md-2 control-label">Password</label>
-                    <div class="col-md-10">
-                      <input type="password" class="form-control" value="password"/>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-md-2 control-label">Readonly</label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" readonly value="Readonly value"/>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-md-2 control-label">Disabled</label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" readonly value="Disabled value"/>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-md-2 control-label">Placeholder</label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" placeholder="Fill this field please"/>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-md-2 control-label">Text area</label>
-                    <div class="col-md-10">
-                      <textarea class="form-control" rows="5"></textarea>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" @click="addDialogClose">Close</button>
-          </div>
-        </div>
+
+      <div class="column is-12">
+        <p class="control">
+          <button class="button is-primary" type="submit" name="button">Sign up</button>
+          <button class="button is-danger" type="button" name="button" @click="errors.clear('form-1')">Clear</button>
+        </p>
       </div>
-    </div>
-    <!-- END MODAL ICON PREVIEW -->
-  </div>
+    </form>
 </template>
 
 <script>
   import Vue from 'vue'
   import VueResource from 'vue-resource'
   import { getCookie } from '../services/Cookie'
+  import VeeValidate, { Validator } from 'vee-validate'
+  import messages from '../assets/js/zh_CN'
+  Validator.updateDictionary({
+    zh_CN: {
+      messages
+    }
+  })
+  const config = {
+    errorBagName: 'errors', // change if property conflicts.
+    delay: 0,
+    locale: 'zh_CN',
+    messages: null,
+    strict: true
+  }
   Vue.use(VueResource)
+  Vue.use(VeeValidate, config)
 
   export default {
     data: function () {
       return {
-        isAbleShowClass: {
-          modal: true,
-          fade: true
+        addIsAbleShowClass: {
+          modal: false,
+          fade: false
+        },
+        addContent: {
+          id: '',
+          userid: '',
+          name: '',
+          place: '',
+          principal: '',
+          RadiationType: '',
+          EnergyRes: '',
+          DoseEquivalent: '',
+          DoseEquivalentRate: '',
+          remark: ''
         }
       }
     },
@@ -97,7 +77,15 @@
         this.Dic = getCookie()
         console.log('-------------------------')
         console.log(this.Dic['userid'])
-        console.log('-------------------------')
+        console.log('------------------------')
+      },
+      validateForm (scope) {
+        this.$validator.validateAll(scope).then(result => {
+          if (result) {
+            // eslint-disable-next-line
+            alert('Form Submitted!');
+          }
+        })
       }
     }
   }

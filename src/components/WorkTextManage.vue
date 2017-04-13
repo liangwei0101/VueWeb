@@ -93,7 +93,7 @@
     </div>
 
     <!--删除文档提示框-->
-    <div class="message-box animated fadeIn" :class="delClass" >
+    <div class="message-box animated fadeIn del" :class="delClass" >
       <div class="mb-container">
         <div class="mb-middle">
           <div class="mb-title"><span class="fa fa-times"></span> 删除 <strong>文档</strong> ?</div>
@@ -326,5 +326,15 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .del{
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+  }
+  .alarm{
+    color: rgba(255, 55, 24, 0.85)
+  }
 </style>

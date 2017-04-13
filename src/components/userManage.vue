@@ -114,7 +114,7 @@
 
               <label class="pull-left" style="padding-left: 0px; padding-top:7px;vertical-align: middle;">总条数为：{{this.pageOne.totalItems}}条</label>
               <div class="col-md-1" style="float: left">
-                <select class="form-control select"  v-model="selected" @change="selectVal">
+                <select class="form-control"  v-model="selected" @change="selectVal">
                   <option class="text-center" v-for="option in options" v-bind:value="option.value">
                     {{ option.text }}
                   </option>
@@ -199,7 +199,7 @@
 
     <!--删除数据-->
     <!-- MESSAGE BOX-->
-    <div class="message-box animated fadeIn" :class="delClass" data-sound="alert" id="mb-remove-row">
+    <div class="message-box animated fadeIn del" :class="delClass" data-sound="alert" id="mb-remove-row">
       <div class="mb-container">
         <div class="mb-middle">
           <div class="mb-title"><span class="fa fa-times"></span> 删除 <strong>数据</strong> ?</div>
@@ -221,7 +221,7 @@
 
     <!--冻结/解冻相关用户-->
     <!-- MESSAGE BOX-->
-    <div class="message-box animated fadeIn" :class="freezeClass">
+    <div class="message-box animated fadeIn del" :class="freezeClass">
       <div class="mb-container">
         <div class="mb-middle">
           <div class="mb-title"><span class="fa fa-times"></span> 冻结/解冻 <strong>用户</strong> ?</div>
@@ -601,5 +601,12 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .del{
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+  }
 </style>

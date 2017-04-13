@@ -43,12 +43,19 @@
       </router-link>
 
       <li class="xn-title">用户导航</li>
-      <router-link to="/Login">
-        <li><a><span class="fa fa-map-marker"></span> <span class="xn-text">用户登入</span></a></li>
-      </router-link>
+
       <router-link to="/ShowWorkText">
-        <li><a><span class="fa fa-map-marker"></span> <span class="xn-text">文章展示</span></a></li>
+        <li><a><span class="fa fa-eye"></span> <span class="xn-text">文章展示</span></a></li>
       </router-link>
+
+      <router-link to="/RadioactiveInfo">
+        <li><a><span class="fa fa-stack-overflow"></span> <span class="xn-text"> 放射源信息管理</span></a></li>
+      </router-link>
+
+      <router-link to="/TransportTask">
+        <li><a><span class="fa fa-truck"></span> <span class="xn-text"> 运输任务管理</span></a></li>
+      </router-link>
+
       <router-link to="/map">
        <li><a><span class="fa fa-map-marker"></span> <span class="xn-text">放射源定位</span></a></li>
       </router-link>

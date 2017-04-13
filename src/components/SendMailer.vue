@@ -41,7 +41,7 @@
                                  :class="{'input': true, 'is-danger': errors.has('提示邮件主题') }"
                                  v-model.value=emailStyle.regSubject />
                         </div>
-                        <i v-show="errors.has('提示邮件主题')" class="fa fa-warning alarm"></i>
+                        <i v-show="errors.has('提示邮件主题')" class="fa fa-hand-o-right alarm"></i>
                         <span v-show="errors.has('提示邮件主题')" class="help is-danger alarm ">{{ errors.first('提示邮件主题') }}</span>
                         <span class="help-block">发送注册提示邮件的主题(username发送时户替换成真正的用户名)</span>
                       </div>
@@ -55,7 +55,7 @@
                                   :class="{'input': true, 'is-danger': errors.has('提示邮件正文') }"
                                   v-model.value=emailStyle.regText ></textarea>
                         </div>
-                        <i v-show="errors.has('提示邮件正文')" class="fa fa-warning alarm"></i>
+                        <i v-show="errors.has('提示邮件正文')" class="fa fa-hand-o-right alarm"></i>
                         <span v-show="errors.has('提示邮件正文')" class="help is-danger alarm">{{ errors.first('提示邮件正文') }}</span>
                         <span class="help-block">这个是发送的警报邮件的正文(username发送时户替换成真正的用户名)</span>
                       </div>
@@ -74,7 +74,7 @@
                                  :class="{'input': true, 'is-danger': errors.has('警报邮件主题') }"
                                  v-model.value=emailStyle.alarmSubject />
                         </div>
-                        <i v-show="errors.has('警报邮件主题')" class="fa fa-warning alarm"></i>
+                        <i v-show="errors.has('警报邮件主题')" class="fa fa-hand-o-right alarm"></i>
                         <span v-show="errors.has('警报邮件主题')" class="help is-danger alarm">{{ errors.first('警报邮件主题') }}</span>
                         <span class="help-block">发送注册提示警报的主题(username发送时户替换成真正的用户名)</span>
                       </div>
@@ -88,7 +88,7 @@
                                   :class="{'input': true, 'is-danger': errors.has('警报邮件正文') }"
                                   v-model.value=emailStyle.alarmText ></textarea>
                         </div>
-                        <i v-show="errors.has('警报邮件正文')" class="fa fa-warning alarm"></i>
+                        <i v-show="errors.has('警报邮件正文')" class="fa fa-hand-o-right alarm"></i>
                         <span v-show="errors.has('警报邮件正文')" class="help is-danger alarm">{{ errors.first('警报邮件正文') }}</span>
                         <span class="help-block">这个是发送的警报邮件的正文(username发送时户替换成真正的用户名)</span>
                       </div>
@@ -113,7 +113,7 @@
                                :class="{'input': true, 'is-danger': errors.has('邮箱') }"
                                v-model.value=emailStyle.emailNumber />
                       </div>
-                      <i v-show="errors.has('邮箱')" class="fa fa-warning alarm"></i>
+                      <i v-show="errors.has('邮箱')" class="fa fa-hand-o-right alarm"></i>
                       <span v-show="errors.has('邮箱')" class="help is-danger alarm">{{ errors.first('邮箱') }}</span>
                       <span class="help-block">发送邮件给用户的发件人邮箱</span>
                     </div>
@@ -128,7 +128,7 @@
                                :class="{'input': true, 'is-danger': errors.has('授权码') }"
                                v-model.value=emailStyle.emailPasswd />
                       </div>
-                      <i v-show="errors.has('授权码')" class="fa fa-warning alarm"></i>
+                      <i v-show="errors.has('授权码')" class="fa fa-hand-o-right alarm"></i>
                       <span v-show="errors.has('授权码')" class="help is-danger alarm">{{ errors.first('授权码') }}</span>
                       <span class="help-block">请自行到相应邮箱官网自行获取</span>
                     </div>
@@ -233,6 +233,6 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .alarm{
-  color: red
+  color: rgba(255, 55, 24, 0.85)
 }
 </style>
