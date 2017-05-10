@@ -3,154 +3,172 @@
 
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb push-down-0">
-          <li><a href="#">用户</a></li>
-          <li class="active"><a href="#">放射源信息管理</a></li>
-        </ul>
+      <li><a href="#">用户</a></li>
+      <li class="active"><a href="#">角色管理</a></li>
+    </ul>
     <!-- END BREADCRUMB -->
 
     <!-- START CONTENT FRAME -->
-        <div class="content-frame">
-          <!-- START CONTENT FRAME TOP -->
-          <div class="content-frame-top">
-            <div class="page-title">
-              <h2><span class="fa fa-pencil"></span> 放射源信息管理</h2>
-            </div>
-          </div>
-          <!-- END CONTENT FRAME TOP -->
+    <div class="content-frame">
+      <!-- START CONTENT FRAME TOP -->
+      <div class="content-frame-top">
+        <div class="page-title">
+          <h2><span class="fa fa-pencil"></span> 角色管理</h2>
+        </div>
+      </div>
+      <!-- END CONTENT FRAME TOP -->
 
-          <!-- START RESPONSIVE TABLES -->
-          <div class="row">
-            <div class="col-md-12">
-              <div class="panel panel-default">
+      <!-- START RESPONSIVE TABLES -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-default">
 
-                <!-- START DATATABLE EXPORT -->
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h3 class="panel-title col-md-3">
-                      <input v-model="selectText" class="form-control" @keyup.enter="selectInfo" placeholder="请输入名称或者负责人姓名"/>
-                    </h3>
-                    <div class="btn-group " style="float: left">
-                      <button class="btn btn-info" @click="selectInfo"><i class="glyphicon glyphicon-zoom-out"></i>查 询</button>
-                    </div>
-                    <div class="btn-group pull-right">
-                      <button class="btn btn-success" @click="addDialogShow"><i class="fa fa-bars"></i> 新 增</button>
-                    </div>
-
-                  </div>
-                  <div class="panel-body">
-                    <table class="table table-bordered table-striped table-actions">
-                      <thead>
-                      <tr>
-                        <th class="text-center" width="50">详情</th>
-                        <th width="100">名称</th>
-                        <th width="100">负责人</th>
-                        <th width="100">放射源地点</th>
-                        <th width="100">辐射类型</th>
-                        <th width="100">放射量</th>
-                        <th width="100">状态</th>
-                        <th width="100">更新时间</th>
-                        <th width="100">警戒值</th>
-                        <th class="text-center" width="100">操作</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr v-for="Info in ShowInfo">
-                        <td class="text-center"><a @click="expansion(Info)"><span class="fa fa-chevron-down"></span></a></td>
-                        <td>{{Info.name}}</td>
-                        <td>{{Info.principal}}</td>
-                        <td>{{Info.place}}</td>
-                        <td>{{Info.RadiationType}}</td>
-                        <td>{{Info.radiationValue[Info.radiationValue.length-1]}}</td>
-                        <td>{{Info.status}}</td>
-                        <td>{{Info.time[Info.time.length-1]}}</td>
-                        <td>{{Info.alertValue}}</td>
-                        <td>
-                          <ul class="panel-controls pull-left" style="padding-left:45px;">
-                            <li><a class="panel-collapse" data-toggle="tooltip" data-placement="bottom" title="编辑" @click="updateWind(Info)"><span class="fa fa-pencil"></span></a></li>
-                            <li><a class="panel-remove" data-toggle="tooltip" data-placement="bottom" title="删除" @click="TipWind(Info)"><span class="glyphicon glyphicon-trash"></span></a></li>
-                          </ul>
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
-
-                    <!--展示或隐藏数据-->
-                    <div class="col-md-12">
-
-                      <div class="col-md-6">
-                        <div class="panel panel-warning" v-show="HideData">
-                          <div class="panel-heading">
-                            <h3 class="panel-title">数据详情展示</h3>
-                          </div>
-                          <div class="panel-body">
-
-                            <div>
-                              <p><strong>名称：</strong>{{hideContent.name}}</p><br>
-                              <p><strong>负责人：</strong>{{hideContent.principal}}</p><br>
-                              <p><strong>放射源地点：</strong>{{hideContent.place}}</p><br>
-                              <p><strong>辐射类型：</strong>{{hideContent.RadiationType}}</p><br>
-                              <p><strong>状态：</strong>{{hideContent.status}}</p><br>
-                              <p><strong>放射量：</strong>{{hideContent.radiationValue}}</p><br>
-                              <p><strong>更新时间：</strong>{{hideContent.time}}</p><br>
-                              <p><strong>警戒值：</strong>{{hideContent.alertValue}}</p>
-                              <p><strong>备注：</strong>{{hideContent.remark}}</p>
-                            </div>
-
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-md-6">
-                        <div class="panel panel-warning" v-show="HideData">
-                          <div class="panel-heading">
-                            <h3 class="panel-title">放射量图表展示</h3>
-                            <ul class="panel-controls">
-                              <li><a class="panel-fullscreen" data-toggle="tooltip" data-placement="bottom" title="扩展"><span class="fa fa-expand"></span></a></li>
-                              <li><a class="panel-collapse" data-toggle="tooltip" data-placement="bottom" title="折叠"><span class="fa fa-angle-down"></span></a></li>
-                            </ul>
-                          </div>
-                          <div class="panel-body">
-
-                            <line-chart
-                              :options="{responsive: false, maintainAspectRatio: false}"
-                              :width="700"
-                              :height="290"
-                              :chart-data="datacollection"></line-chart>
-
-                          </div>
-                        </div>
-                    </div>
-
-                    </div>
-                    <!--展示或隐藏数据-->
-
-                    <label class="pull-left" style="padding-left: 0px; padding-top:7px;vertical-align: middle;">总条数为：{{this.pageOne.totalItems}}条</label>
-                    <div class="col-md-1" style="float: left">
-                      <select class="form-control"  v-model="selected" @change="selectVal">
-                        <option class="text-center" v-for="option in options" v-bind:value="option.value">
-                          {{ option.text }}
-                      </option>
-                      </select>
-                    </div>
-                    <!--分页控件-->
-                    <pagination :current-page="pageOne.currentPage"
-                                :total-pages="pageOne.totalPages"
-                                :totalItems="pageOne.totalItems"
-                                :itemsPerPage="pageOne.itemsPerPage"
-                                @page-changed="pageOneChanged">
-                    </pagination>
-                    <!--分页控件-->
-                  </div>
-                  <!-- END DATATABLE EXPORT -->
-
+            <!-- START DATATABLE EXPORT -->
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title col-md-3">
+                  <input v-model="selectText" class="form-control" @keyup.enter="selectInfo" placeholder="请输入角色编号"/>
+                </h3>
+                <div class="btn-group " style="float: left">
+                  <button class="btn btn-info" @click="selectInfo"><i class="glyphicon glyphicon-zoom-out"></i>查 询</button>
                 </div>
+                <div class="btn-group pull-right">
+                  <button class="btn btn-success" @click="addDialogShow"><i class="fa fa-bars"></i> 新 增</button>
+                </div>
+
               </div>
+              <div class="panel-body">
+                <table class="table table-bordered table-striped table-actions">
+                  <thead>
+                  <tr>
+                    <th width="100">角色编号</th>
+                    <th width="100">角色名称</th>
+                    <th class="text-center" width="100">操作</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr v-for="Info in ShowInfo">
+                    <td>{{Info.name}}</td>
+                    <td>{{Info.principal}}</td>
+                    <td>{{Info.alertValue}}</td>
+                    <td>
+                      <ul class="panel-controls pull-left" style="padding-left:45px;">
+                        <li><a class="panel-collapse" data-toggle="tooltip" data-placement="bottom" title="编辑" @click="updateWind(Info)"><span class="fa fa-pencil"></span></a></li>
+                        <li><a class="panel-remove" data-toggle="tooltip" data-placement="bottom" title="删除" @click="TipWind(Info)"><span class="glyphicon glyphicon-trash"></span></a></li>
+                      </ul>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+
+                <label class="pull-left" style="padding-left: 0px; padding-top:7px;vertical-align: middle;">总条数为：{{this.pageOne.totalItems}}条</label>
+                <div class="col-md-1" style="float: left">
+                  <select class="form-control"  v-model="selected" @change="selectVal">
+                    <option class="text-center" v-for="option in options" v-bind:value="option.value">
+                      {{ option.text }}
+                    </option>
+                  </select>
+                </div>
+                <!--分页控件-->
+                <pagination :current-page="pageOne.currentPage"
+                            :total-pages="pageOne.totalPages"
+                            :totalItems="pageOne.totalItems"
+                            :itemsPerPage="pageOne.itemsPerPage"
+                            @page-changed="pageOneChanged">
+                </pagination>
+                <!--分页控件-->
+              </div>
+              <!-- END DATATABLE EXPORT -->
 
             </div>
           </div>
-          <!-- END RESPONSIVE TABLES -->
 
         </div>
+      </div>
+      <!-- END RESPONSIVE TABLES -->
+
+      <!-- SETTINGS WIDGET -->
+      <div class="col-md-12">
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><span class="fa fa-cogs"></span> Settings</h3>
+            <ul class="panel-controls">
+              <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+              <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+              <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+            </ul>
+          </div>
+          <div class="panel-body">
+            <form action="#" role="form" class="form-horizontal">
+              <div class="form-group">
+                <label class="col-md-4 control-label text-left">Wi-Fi</label>
+                <div class="col-md-3">
+                  <label class="switch">
+                    <input type="checkbox" class="switch" value="1" checked/>
+                    <span></span>
+                  </label>
+                </div>
+                <div class="col-md-5">
+                  <span class="help-block">Wi-Fi networking</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label text-left">Location</label>
+                <div class="col-md-3">
+                  <label class="switch">
+                    <input type="checkbox" class="switch" value="1" checked/>
+                    <span></span>
+                  </label>
+                </div>
+                <div class="col-md-5">
+                  <span class="help-block">Access your location</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label text-left">Celluar</label>
+                <div class="col-md-3">
+                  <label class="switch">
+                    <input type="checkbox" class="switch" value="1"/>
+                    <span></span>
+                  </label>
+                </div>
+                <div class="col-md-5">
+                  <span class="help-block">They steal money :(</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label text-left">Find my Phone</label>
+                <div class="col-md-3">
+                  <label class="switch">
+                    <input type="checkbox" class="switch" value="1" checked/>
+                    <span></span>
+                  </label>
+                </div>
+                <div class="col-md-5">
+                  <span class="help-block">Nice feature</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label text-left">Sounds</label>
+                <div class="col-md-3">
+                  <label class="switch">
+                    <input type="checkbox" class="switch" value="1"/>
+                    <span></span>
+                  </label>
+                </div>
+                <div class="col-md-5">
+                  <span class="help-block">Wanna mute?</span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+      <!-- END SETTINGS WIDGET -->
+
+    </div>
     <!-- START CONTENT FRAME -->
 
     <!-- START addDilog PREVIEW -->
@@ -205,20 +223,20 @@
                       <select class="form-control" @change="TypeSelectChange" v-model="selectedType">
                         <option v-for="option in selectRadiationType" v-bind:value="option.value">
                           {{ option.text }}
-                      </option>
+                        </option>
                       </select>
                     </div>
                   </div>
                   <div class="form-group">
-                  <label class="col-md-2 control-label">放射量</label>
-                  <div class="col-md-10" :class="{'has-error':errors.has('addForm.放射量')}">
-                    <input type="text" name="放射量" class="form-control" placeholder="如:0.01uSv" v-validate="'required'"
-                           :class="{'input': true, 'is-danger': errors.has('addForm.放射量') }"
-                           v-model="tempRadiationValue"/>
-                    <i v-show="errors.has('addForm.放射量')" class="fa fa-hand-o-right alarm"></i>
-                    <span v-show="errors.has('addForm.放射量')" class="help is-danger alarm">{{ errors.first('addForm.放射量') }}</span>
+                    <label class="col-md-2 control-label">放射量</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('addForm.放射量')}">
+                      <input type="text" name="放射量" class="form-control" placeholder="如:0.01uSv" v-validate="'required'"
+                             :class="{'input': true, 'is-danger': errors.has('addForm.放射量') }"
+                             v-model="tempRadiationValue"/>
+                      <i v-show="errors.has('addForm.放射量')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('addForm.放射量')" class="help is-danger alarm">{{ errors.first('addForm.放射量') }}</span>
+                    </div>
                   </div>
-                </div>
                   <div class="form-group">
                     <label class="col-md-2 control-label">状态</label>
                     <div class="col-md-10">
@@ -246,10 +264,10 @@
                     </div>
                   </div>
 
-                    <div class="">
-                      <button class="pull-left col-md-offset-4 col-sm-offset-4 btn btn-info" type="button" @click="errors.clear('addForm')"><span class="fa fa-fire"></span> 复原</button>
-                      <button type="submit" class="pull-left col-md-offset-1 col-sm-offset-1 btn btn-success"><span class="fa fa-fire"></span> 保存</button>
-                    </div>
+                  <div class="">
+                    <button class="pull-left col-md-offset-4 col-sm-offset-4 btn btn-info" type="button" @click="errors.clear('addForm')"><span class="fa fa-fire"></span> 复原</button>
+                    <button type="submit" class="pull-left col-md-offset-1 col-sm-offset-1 btn btn-success"><span class="fa fa-fire"></span> 保存</button>
+                  </div>
                 </form>
               </div>
             </div>
@@ -312,7 +330,7 @@
                       <select class="form-control" @change="TypeSelectChange" v-model="selectedType">
                         <option v-for="option in selectRadiationType" v-bind:value="option.value">
                           {{ option.text }}
-                      </option>
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -393,7 +411,7 @@
   import Vue from 'vue'
   import Pagination from './Pagination.vue'
   import VueResource from 'vue-resource'
-  import {getCookie, CookieUserType} from '../services/Cookie'
+  import { getCookie } from '../services/Cookie'
   import VeeValidate, { Validator } from 'vee-validate'
   import messages from '../assets/js/zh_CN'
   import LineChart from '../assets/js/LineChart'
@@ -568,11 +586,9 @@
           })
       },
       getRadioactiveInfo () {
-        var getUrl = 'http://localhost:3000/radioactive/get'
-        if (CookieUserType() === '2') {
-          getUrl = 'http://localhost:3000/radioactive/get' + '/' + this.Cookie.userid
-        }
-        var resource = this.$resource(getUrl)
+        var getUrl = 'http://localhost:3000/radioactive/get' + '/' + this.Cookie.userid
+        var vm = this
+        var resource = vm.$resource(getUrl)
         resource.get()
           .then((response) => {
             this.AllInfo = response.body
@@ -695,19 +711,10 @@
         var resource = this.$resource(selectUrl)
         resource.get()
           .then((response) => {
-            this.AllInfo = []
-            if (CookieUserType() === '2') {
-              for (var i = 0; i < response.body.length; i++) {
-                if (this.Cookie.userid === response.body[i].userid) {
-                  this.AllInfo.push(response.body[i])
-                }
-              }
-              this.setPagination(this.AllInfo)
-            } else {
-              console.log(response.body)
-              this.AllInfo = response.body
-              this.setPagination(this.AllInfo)
-            }
+            console.log('我是返回的测试！')
+            console.log(response.body)
+            this.AllInfo = response.body
+            this.setPagination(this.AllInfo)
           })
           .catch(function (response) {
             console.log(response)

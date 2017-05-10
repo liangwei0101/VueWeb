@@ -3,8 +3,7 @@
 
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb" style="text-align:left;">
-      <li><a href="#">主页</a></li>
-      <li><a href="#">管理员</a></li>
+      <li><a href="#">用户</a></li>
       <li class="active">用户管理</li>
     </ul>
     <!-- END BREADCRUMB -->
@@ -30,58 +29,25 @@
               <div class="btn-group " style="float: left">
                 <button class="btn btn-info" @click="selectUser"><i class="glyphicon glyphicon-zoom-out"></i>查 询</button>
               </div>
-              <div class="btn-group pull-right">
-                <button class="btn btn-success" @click="handleAdd"><i class="fa fa-bars"></i> 新 增</button>
+              <div class="btn-group pull-right" v-show="addButtonShow">
+                <button class="btn btn-success" @click="addDialogShow"><i class="fa fa-bars"></i> 新 增</button>
               </div>
 
             </div>
-            <!--<div class="panel-body">
-              <table id="customers2" class="table datatable">
-                <thead>
-                <tr>
-                  <th>序号</th>
-                  <th>用户编号</th>
-                  <th>用户名称</th>
-                  <th>用户邮箱</th>
-                  <th>用户手机</th>
-                  <th>是否可用</th>
-                  <th>操作</th>
-                </tr>
-                </thead>
-                &lt;!&ndash;<tr>
-                  <td>Tiger Nixon</td>
-                  <td>System Architect</td>
-                  <td>Edinburgh</td>
-                  <td>61</td>
-                  <td>2011/04/25</td>
-                  <td>$320,800</td>
-                </tr>&ndash;&gt;
-     &lt;!&ndash;           <tr v-for="person in people">
-                  <td>{{ $index }}</td>
-                  <td>{{ person.name }}</td>
-                  <td>{{ person.name }}</td>
-                  <td>{{ person.age }}</td>
-                  <td>{{ person.age }}</td>
-                  <td>{{ person.sex }}</td>
-                  <td>{{ person.sex }}</td>
-                </tr>&ndash;&gt;
-              </table>
-
-            </div>-->
             <div class="panel-body">
-              <table id="customers2" class="table-hover table-striped table datatable">
+              <table class="table-hover table-striped table">
                 <thead>
                 <tr>
-                  <th>用户编号</th>
-                  <th>用户姓名</th>
-                  <th>用户手机</th>
-                  <th>用户邮箱</th>
-                  <th>是否可用</th>
+                  <th width="13%">用户编号</th>
+                  <th width="13%">用户姓名</th>
+                  <th width="13%">用户手机</th>
+                  <th width="13%">用户邮箱</th>
+                  <th width="13%">是否可用</th>
                   <th style="padding-left:45px;">操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="user in usersShow">
+                <tr v-for="user in ShowInfo">
                   <td style="text-align:left;vertical-align: middle;">{{user.userid}}</td>
                   <td style="text-align:left;vertical-align: middle;">{{user.name}}</td>
                   <td style="text-align:left;vertical-align: middle;">{{user.telephone}}</td>
@@ -89,23 +55,11 @@
                   <td style="text-align:left;vertical-align: middle;">{{user.isAble}}</td>
                   <td style="text-align:center;">
                     <ul class="panel-controls pull-left">
-                      <li><a class="panel-collapse" data-toggle="tooltip" data-placement="top" title="编辑" @click="handleEdit(user)"><span class="fa fa-pencil"></span></a></li>
-                      <li><a class="panel-refresh" data-toggle="tooltip" data-placement="top" title="冻结/解冻" @click="showUserFreezeTip(user)"><span class="glyphicon glyphicon-stop"></span></a></li>
-                      <li><a class="panel-remove" data-toggle="tooltip" data-placement="top" title="删除" @click="showUserDelTip(user)"><span class="glyphicon glyphicon-trash"></span></a></li>
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="text-align:left; vertical-align: middle;">Shad Decker</td>
-                  <td style="text-align:left;vertical-align: middle;">Regional Director</td>
-                  <td style="text-align:left;vertical-align: middle;">Edinburgh</td>
-                  <td style="text-align:left;vertical-align: middle;">51</td>
-                  <td style="text-align:left;vertical-align: middle;">2008/11/13</td>
-                  <td style="text-align:left;vertical-align: middle;">
-                    <ul class="panel-controls pull-left">
-                      <li><a href="" class="panel-collapse" data-toggle="tooltip" data-placement="top" title="编辑" @click="handleEdit(3)"><span class="fa fa-pencil"></span></a></li>
-                      <li><a href="#" class="panel-refresh" data-toggle="tooltip" data-placement="top" title="冻结/解冻" @click="showUserFreezeTip"><span class="glyphicon glyphicon-stop"></span></a></li>
-                      <li><a href="#" class="panel-remove" data-toggle="tooltip" data-placement="top" title="删除" @click="showUserDelTip"><span class="fa fa-times"></span></a></li>
+                      <li v-show="updateIconShow"><a class="panel-collapse" data-toggle="tooltip" data-placement="top" title="编辑" @click="updateDialogShow(user)"><span class="fa fa-pencil"></span></a></li>
+                      <li v-show="passwdIconShow"><a class="panel-collapse" data-toggle="tooltip" data-placement="top" title="密码修改" @click="passwdDialogShow(user)"><span class="fa fa-user"></span></a></li>
+                      <li v-show="imageIconShow"><a class="panel-collapse" data-toggle="tooltip" data-placement="top" title="头像设置" @click="uploadImgShow(user)"><span class="fa fa-cloud-upload"></span></a></li>
+                      <li v-show="freezeIconShow"><a class="panel-refresh" data-toggle="tooltip" data-placement="top" title="冻结/解冻" @click="showUserFreezeTip(user)"><span class="glyphicon glyphicon-stop"></span></a></li>
+                      <li v-show="deleteIconShow"><a class="panel-remove" data-toggle="tooltip" data-placement="top" title="删除" @click="showUserDelTip(user)"><span class="glyphicon glyphicon-trash"></span></a></li>
                     </ul>
                   </td>
                 </tr>
@@ -136,66 +90,256 @@
       </div>
     </div>
     <!-- END PAGE CONTENT WRAPPER -->
-    <!--新增界面-->
-    <el-dialog title="用户新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="编号" prop="userid" >
-          <el-input v-model.userid="ruleForm2.userid"></el-input>
-        </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model.name="ruleForm2.name"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="pass">
-          <el-input type="password" v-model.pass="ruleForm2.pass" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱"
-                      prop="email"
-                      :rules="[
-      { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-      { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }
-    ]">
-          <el-input v-model.email="ruleForm2.email"></el-input>
-        </el-form-item>
-        <el-form-item label="电话" prop="telephone">
-          <el-input v-model.telephone="ruleForm2.telephone"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm2')" :loading="addLoading">提交</el-button>
-          <el-button @click="resetForm('ruleForm2')">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-    <!--新增界面-->
 
-    <!--修改界面-->
-    <el-dialog title="用户修改" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" :rules="rules2" ref="editForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="编号" prop="userid" >
-          <el-input v-model.userid="editForm.userid"></el-input>
-        </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model.name="editForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="pass">
-          <el-input type="password" v-model.pass="editForm.pass" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱"
-                      prop="email"
-                      :rules="[
-      { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-      { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }
-    ]">
-          <el-input v-model.email="editForm.email"></el-input>
-        </el-form-item>
-        <el-form-item label="电话" prop="telephone">
-          <el-input v-model.telephone="editForm.telephone"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="editSubmitForm('editForm')" :loading="editLoading">提交</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-    <!--新增界面-->
+    <!-- START addDilog PREVIEW -->
+    <div class="dialog" :class="addIsAbleShowClass">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header dialogHeader" >
+            <button type="button" class="close" data-dismiss="modal" @click="addDialogClose"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">用户新增</h4>
+          </div>
+
+          <div class="modal-body">
+            <div class="row">
+
+              <div class="col-md-4">
+                <div class="icon-preview"></div>
+              </div>
+              <div class="col-md-12">
+
+                <form class="form-horizontal" role="form" @submit.prevent="validateAddForm('addForm')" data-vv-scope="addForm">
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">编号</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('addForm.编号')}">
+                      <input type="text" name="编号" class="form-control" placeholder="编号" v-validate="'required'"
+                             :class="{'input': true, 'is-danger': errors.has('addForm.编号') }"
+                             v-model="addContent.userid"/>
+                      <i v-show="errors.has('addForm.编号')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('addForm.编号')" class="help is-danger alarm">{{ errors.first('addForm.编号') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">姓名</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('addForm.姓名')}">
+                      <input type="text" name="姓名" class="form-control" placeholder="姓名" v-validate="'required'"
+                             :class="{'input': true, 'is-danger': errors.has('addForm.姓名') }"
+                             v-model="addContent.name" />
+                      <i v-show="errors.has('addForm.姓名')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('addForm.姓名')" class="help is-danger alarm">{{ errors.first('addForm.姓名') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">密码</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('addForm.密码')}">
+                      <input type="password" name="密码" class="form-control" placeholder="密码"  v-validate="'required'"
+                             :class="{'input': true, 'is-danger': errors.has('addForm.密码') }"
+                             v-model="addContent.pass" />
+                      <i v-show="errors.has('addForm.密码')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('addForm.密码')" class="help is-danger alarm">{{ errors.first('addForm.密码') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">邮箱</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('addForm.邮箱')}">
+                      <input type="text" name="邮箱" class="form-control" placeholder="邮箱"  v-validate="'required|email'"
+                             :class="{'input': true, 'is-danger': errors.has('邮箱') }"
+                             v-model="addContent.email" />
+                      <i v-show="errors.has('addForm.邮箱')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('addForm.邮箱')" class="help is-danger alarm">{{ errors.first('addForm.邮箱') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">用户类型</label>
+                    <div class="col-md-10">
+                      <select class="form-control" v-model="userTypeSelected">
+                        <option v-for="option in userTypeSource" v-bind:value="option.value">
+                          {{ option.text }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">电话</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('addForm.电话')}">
+                      <input type="text"  name="电话" placeholder="电话" class="form-control" v-validate="'required'"
+                             :class="{'input': true, 'is-danger': errors.has('addForm.电话') }"
+                             v-model="addContent.telephone" />
+                      <i v-show="errors.has('addForm.电话')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('addForm.电话')" class="help is-danger alarm">{{ errors.first('addForm.电话') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <button class="pull-left col-md-offset-4 col-sm-offset-4 btn btn-info" type="button" @click="errors.clear('addForm')"><span class="fa fa-times-circle-o"></span> 复原</button>
+                    <button type="submit" class="pull-left col-md-offset-1 col-sm-offset-1 btn btn-success"><span class="fa fa-fire"></span> 保存</button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- END MODAL ICON PREVIEW -->
+
+    <!-- START 修改密码 PREVIEW -->
+    <div class="passwd" :class="updatePassClass" >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header dialogHeader" >
+            <button type="button" class="close" data-dismiss="modal" @click="passwdDialogClose"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">用户密码修改</h4>
+          </div>
+
+          <div class="modal-body">
+            <div class="row">
+
+              <div class="col-md-4">
+                <div class="icon-preview"></div>
+              </div>
+              <div class="col-md-12">
+
+                <form class="form-horizontal" role="form" @submit.prevent="validatePasswdForm('updatePasswd')" data-vv-scope="updatePasswd">
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">新密码</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('updatePasswd.新密码')}">
+                      <input type="password" name="新密码" class="form-control" placeholder="新密码"  v-validate="'required|confirmed:确认密码'"
+                             :class="{'input': true, 'is-danger': errors.has('updatePasswd.新密码') }"
+                             v-model="updatePasswd.password" />
+                      <i v-show="errors.has('updatePasswd.新密码')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('updatePasswd.新密码')" class="help is-danger alarm">{{ errors.first('updatePasswd.新密码') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">确认密码</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('updatePasswd.确认密码')}">
+                      <input type="password" name="确认密码" class="form-control" placeholder="确认密码"  v-validate="'required'"
+                             :class="{'input': true, 'is-danger': errors.has('updatePasswd.确认密码') }"
+                             v-model="updatePasswd.confirmPassword" />
+                      <i v-show="errors.has('updatePasswd.确认密码')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('updatePasswd.确认密码')" class="help is-danger alarm">{{ errors.first('updatePasswd.确认密码') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <button class="pull-left col-md-offset-4 col-sm-offset-4 btn btn-info" type="button" @click="errors.clear('updatePasswd')"><span class="fa fa-times-circle-o"></span> 复原</button>
+                    <button type="submit" class="pull-left col-md-offset-1 col-sm-offset-1 btn btn-success"><span class="fa fa-fire"></span> 保存</button>
+                  </div>
+
+                </form>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- END 修改密码 PREVIEW -->
+
+    <!-- START 修改 PREVIEW -->
+    <div class="dialog" :class="updateIsAbleShowClass">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header dialogHeader" >
+            <button type="button" class="close" data-dismiss="modal" @click="updateDialogClose"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">用户修改</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="icon-preview"></div>
+              </div>
+              <div class="col-md-12">
+
+                <form class="form-horizontal" role="form" @submit.prevent="validateUpateForm('updateForm')" data-vv-scope="updateForm">
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">编号</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('updateForm.编号')}">
+                      <input type="text" name="编号" class="form-control" placeholder="编号" v-validate="'required'"
+                             :class="{'input': true, 'is-danger': errors.has('updateForm.编号') }"
+                             v-model="updateContent.userid"/>
+                      <i v-show="errors.has('updateForm.编号')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('updateForm.编号')" class="help is-danger alarm">{{ errors.first('updateForm.编号') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">姓名</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('updateForm.姓名')}">
+                      <input type="text" name="姓名" class="form-control" placeholder="姓名" v-validate="'required'"
+                             :class="{'input': true, 'is-danger': errors.has('updateForm.姓名') }"
+                             v-model="updateContent.name" />
+                      <i v-show="errors.has('updateForm.姓名')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('updateForm.姓名')" class="help is-danger alarm">{{ errors.first('updateForm.姓名') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">邮箱</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('updateForm.邮箱')}">
+                      <input type="text" name="邮箱" class="form-control" placeholder="邮箱"  v-validate="'required|email'"
+                             :class="{'input': true, 'is-danger': errors.has('updateForm.邮箱') }"
+                             v-model="updateContent.email" />
+                      <i v-show="errors.has('updateForm.邮箱')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('updateForm.邮箱')" class="help is-danger alarm">{{ errors.first('updateForm.邮箱') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">电话</label>
+                    <div class="col-md-10" :class="{'has-error':errors.has('updateForm.电话')}">
+                      <input type="text"  name="电话" placeholder="电话" class="form-control" v-validate="'required'"
+                             :class="{'input': true, 'is-danger': errors.has('updateForm.电话') }"
+                             v-model="updateContent.telephone" />
+                      <i v-show="errors.has('updateForm.电话')" class="fa fa-hand-o-right alarm"></i>
+                      <span v-show="errors.has('updateForm.电话')" class="help is-danger alarm">{{ errors.first('updateForm.电话') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="">
+                    <button class="pull-left col-md-offset-4 col-sm-offset-4 btn btn-info" type="button" @click="errors.clear('updateForm')"><span class="fa fa-times-circle-o"></span> 复原</button>
+                    <button type="submit" class="pull-left col-md-offset-1 col-sm-offset-1 btn btn-success"><span class="fa fa-fire"></span> 保存</button>
+                  </div>
+
+                </form>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- START 修改 PREVIEW -->
+
+    <!-- START 设置头像 PREVIEW -->
+
+    <my-upload field="imageId"
+               @crop-success="cropSuccess"
+               @crop-upload-success="cropUploadSuccess"
+               @crop-upload-fail="cropUploadFail"
+               v-model="upLoadShow"
+               :width="300"
+               :height="300"
+               url="http://localhost:3000/userUpload"
+               :params="params"
+               :headers="headers"
+               img-format="jpg"></my-upload>
+
+    <!-- START 设置头像 PREVIEW -->
 
     <!--删除数据-->
     <!-- MESSAGE BOX-->
@@ -247,124 +391,65 @@
   import Pagination from './Pagination.vue'
   import Vue from 'vue'
   import VueResource from 'vue-resource'
+  import VueCookie from 'vue-cookie'
+  import myUpload from 'vue-image-crop-upload/upload-2.vue'
+  import {getCookie, CookieUserType} from '../services/Cookie'
+  import VeeValidate, { Validator } from 'vee-validate'
+  import messages from '../assets/js/zh_CN'
+  Validator.updateDictionary({
+    zh_CN: {
+      messages
+    }
+  })
+  const config = {
+    errorBagName: 'errors', // change if property conflicts.
+    delay: 0,
+    locale: 'zh_CN',
+    messages: null,
+    strict: true
+  }
   Vue.use(VueResource)
+  Vue.use(VueCookie)
+  Vue.use(VeeValidate, config)
 
   export default {
-    components: { Pagination },
+    components: { Pagination,
+      'my-upload': myUpload },
     data () {
-      var checkAge = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('年龄不能为空'))
-        }
-        setTimeout(() => {
-          if (!Number.isInteger(value)) {
-            callback(new Error('请输入数字值'))
-          } else {
-            if (value < 18) {
-              callback(new Error('必须年满18岁'))
-            } else {
-              callback()
-            }
-          }
-        }, 1000)
-      }
-      var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'))
-        } else {
-          if (this.ruleForm2.checkPass !== '') {
-            this.$refs.ruleForm2.validateField('checkPass')
-          }
-          callback()
-        }
-      }
-      var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'))
-        } else if (value !== this.ruleForm2.pass) {
-          callback(new Error('两次输入密码不一致!'))
-        } else {
-          callback()
-        }
-      }
-      var validUerid = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入用户编号'))
-        }
-        callback()
-      }
-      var validName = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入用户名称'))
-        }
-        callback()
-      }
-      var validPhone = (rule, value, callback) => {
-        if (value === '') {
-          return callback(new Error('请输入手机号码'))
-        } else {
-          var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/
-          if (!myreg.test(value)) {
-            return callback(new Error('请输入有效的手机号码'))
-          }
-        }
-        callback()
-      }
       return {
-        usersShow: [],
-        users: [],
+        ShowInfo: [],
+        AllInfo: [],
         delUser: '',
         selectText: '',
         freezeUserInfo: '',
-        addFormVisible: false,
-        addLoading: false,
-        editFormVisible: false,
-        editLoading: false,
         delClass: {
           open: false
         },
         freezeClass: {
           open: false
         },
-        ruleForm2: {
+        addIsAbleShowClass: {
+          modal: true,
+          fade: true
+        },
+        updateIsAbleShowClass: {
+          modal: true,
+          fade: true
+        },
+        updatePassClass: {
+          modal: true,
+          fade: true
+        },
+        addContent: {
           userid: '',
           name: '',
           pass: '',
-          checkPass: '',
-          age: '',
           email: '',
-          telephone: ''
+          isAble: '',
+          telephone: '',
+          userType: ''
         },
-        editForm: {
-          userid: '',
-          name: '',
-          pass: '',
-          checkPass: '',
-          age: '',
-          email: '',
-          telephone: ''
-        },
-        rules2: {
-          pass: [
-            { validator: validatePass, trigger: 'blur' }
-          ],
-          checkPass: [
-            { validator: validatePass2, trigger: 'blur' }
-          ],
-          age: [
-            { validator: checkAge, trigger: 'blur' }
-          ],
-          userid: [
-            {validator: validUerid, trigger: 'blur'}
-          ],
-          name: [
-            {validator: validName, trigger: 'blur'}
-          ],
-          telephone: [
-            {validator: validPhone, trigger: 'blur'}
-          ]
-        },
-        apiUrl: 'http://localhost:3000/api',
+        updateContent: {},
         //  分页控件相关属性
         pageOne: {
           currentPage: 1,
@@ -379,204 +464,243 @@
           { text: '20条/页', value: '20' },
           { text: '50条/页', value: '50' },
           { text: '100条/页', value: '100' }
-        ]
+        ],
+        selectedStatus: '0',
+        selectStatusType: [
+          { text: '是', value: '0' },
+          { text: '否', value: '1' }],
+        userTypeSelected: '2',
+        updateUserTypeSelected: '',
+        userTypeSource: [
+          { text: '1(管理员)', value: '1' },
+          { text: '2(普通用户)', value: '2' }],
+        tempSelect: '',
+        updatePasswd: {
+          userid: '',
+          password: '',
+          confirmPassword: ''
+        },
+        imageId: '',
+        upLoadShow: false,
+        Cookie: {
+          userid: '',
+          name: ''
+        },
+        updateIconShow: true,
+        passwdIconShow: true,
+        imageIconShow: true,
+        freezeIconShow: true,
+        deleteIconShow: true,
+        addButtonShow: true
       }
     },
     mounted: function () {
+      this.vueCookie()
       this.getUserInfo()
+      this.setUI()
     },
     methods: {
-      //  显示新增界面
-      handleAdd: function () {
-        this.addFormVisible = true
-        this.ruleForm2 = {
-          userid: '',
-          name: '',
-          pass: '',
-          checkPass: '',
-          age: '',
-          email: '',
-          telephone: ''
-        }
+      addDialogShow () {
+        this.addIsAbleShowClass.modal = false
+        this.addIsAbleShowClass.fade = false
       },
-      //  显示编辑界面
-      handleEdit: function (user) {
-        this.editFormVisible = true
-        this.editForm = {
-          userid: user.userid,
-          name: user.name,
-          pass: user.password,
-          email: user.email,
-          telephone: user.telephone,
-          isAble: user.isAble
-        }
+      addDialogClose () {
+        this.addIsAbleShowClass.modal = true
+        this.addIsAbleShowClass.fade = true
       },
-      submitForm (formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.createUser()
-            this.addFormVisible = false
-          } else {
-            console.log('error submit!!')
-            return false
+      updateDialogShow (Info) {
+        console.log(Info)
+        this.updateIsAbleShowClass.modal = false
+        this.updateIsAbleShowClass.fade = false
+        this.updateContent = Info
+        this.updateUserTypeSelected = Info.userType
+      },
+      updateDialogClose () {
+        this.updateIsAbleShowClass.modal = true
+        this.updateIsAbleShowClass.fade = true
+      },
+      passwdDialogShow (Info) {
+        this.updatePassClass.modal = false
+        this.updatePassClass.fade = false
+        this.updatePasswd.userid = Info.userid
+      },
+      passwdDialogClose () {
+        this.updatePassClass.modal = true
+        this.updatePassClass.fade = true
+      },
+      validateAddForm (scope) {
+        this.$validator.validateAll(scope).then(result => {
+          if (result) {
+            this.addUser()
           }
         })
       },
-      editSubmitForm (formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
+      validateUpateForm (scope) {
+        this.$validator.validateAll(scope).then(result => {
+          if (result) {
             this.editUser()
-            this.editFormVisible = false
-          } else {
-            console.log('error submit!!')
-            return false
           }
         })
       },
-      resetForm (formName) {
-        this.$refs[formName].resetFields()
+      validatePasswdForm (scope) {
+        this.$validator.validateAll(scope).then(result => {
+          if (result) {
+            this.changePasswd()
+          }
+        })
       },
-      createUser: function () {
-        var Params = {userid: this.ruleForm2.userid,
-          name: this.ruleForm2.name,
-          pass: this.ruleForm2.pass,
-          email: this.ruleForm2.email,
-          telephone: this.ruleForm2.telephone,
-          isAble: '是'
-        }
+      addUser () {
+        var addUrl = 'http://localhost:3000/userInfo/save'
+        this.addContent.userType = this.userTypeSelected
+        var Params = this.addContent
         console.log(Params)
-        var resource = this.$resource(this.apiUrl)
-        resource.save(this.apiUrl, Params)
+        var resource = this.$resource(addUrl)
+        resource.save(addUrl, Params)
           .then((response) => {
-            if (this.usersShow.length < Number(this.selected)) {
-              this.usersShow.push(Params)
-              console.log('111111111')
+            if (response.body === '304') {
+              this.$Message.warning('此用户id已存在！')
             } else {
-              this.users.push(Params)
-              console.log('22222222222')
+              this.sendEmail(Params.userid)
+              this.$Message.success('保存用户信息成功！')
+              this.addContent = []
+              this.addDialogClose()
+              this.getUserInfo()
             }
-            this.sendEmail(Params.userid)
-            this.$message({
-              message: '保存用户信息成功！',
-              type: 'success'
-            })
-            this.pageOne.totalItems++
           })
       },
-      editUser: function () {
-        var editUrl = this.apiUrl + '/' + this.editForm.userid
-        var Params = {userid: this.editForm.userid,
-          name: this.editForm.name,
-          pass: this.editForm.pass,
-          email: this.editForm.email,
-          telephone: this.editForm.telephone,
-          isAble: this.editForm.isAble
-        }
-        var resource = this.$resource(editUrl)
-        resource.save(editUrl, Params)
+      removeUser () {
+        var delUrl = 'http://localhost:3000/userInfo/remove'
+        var resource = this.$resource(delUrl)
+        resource.save({userid: this.delUser.userid})
           .then((response) => {
-            this.$message({
-              message: '保存用户信息成功！',
-              type: 'success'
-            })
+            this.$Message.success('删除此用户成功！')
+            this.hideUserTip()
             this.getUserInfo()
           })
       },
-      getUserInfo: function () {
-        var vm = this
-        var resource = vm.$resource(this.apiUrl)
+      editUser () {
+        var updateUrl = 'http://localhost:3000/userInfo/update' + '/' + this.updateContent.userid
+        this.updateContent.isAble = this.tempSelect
+        var Params = this.updateContent
+        var resource = this.$resource(updateUrl)
+        resource.save(updateUrl, Params)
+          .then((response) => {
+            this.$Message.success('修改用户信息成功！')
+            this.updateDialogClose()
+            this.getUserInfo()
+          })
+      },
+      getUserInfo () {
+        var getUrl = 'http://localhost:3000/userInfo/get'
+        if (CookieUserType() === '2') {
+          getUrl = 'http://localhost:3000/userInfo/get' + '/' + this.Cookie.userid
+        }
+        var resource = this.$resource(getUrl)
         resource.get()
           .then((response) => {
-            console.log('我是返回的测试！')
-            this.users = response.body
-            this.setPagination(this.users)
+            this.AllInfo = response.body
+            this.setPagination(this.AllInfo)
           })
           .catch(function (response) {
             console.log(response)
           })
       },
-      showUserDelTip: function (user) {
-        this.delClass.open = true
-        this.delUser = user
-        console.log(this.delUser.userid)
-      },
-      showUserFreezeTip: function (user) {
-        this.freezeClass.open = true
-        this.freezeUserInfo = user
-        console.log(this.freezeUserInfo)
-      },
-      removeUser: function () {
-        console.log('要删除的前面')
-        var delUrl = 'http://localhost:3000/deleteUser'
-        var resource = this.$resource(delUrl)
-        resource.save({userid: this.delUser.userid})
-          .then((response) => {
-            console.log('要删除的中间')
-            this.$message({
-              message: '已删除此用户！',
-              type: 'success'
-            })
-            this.hideUserTip()
-            this.getUserInfo()
-          })
-      },
-      freezeUser: function () {
-        var freezeUrl = 'http://localhost:3000/freezeUser'
+      freezeUser () {
+        if (this.freezeUserInfo.isAble === '是') {
+          this.freezeUserInfo.isAble = '0'
+        } else {
+          this.freezeUserInfo.isAble = '1'
+        }
+        var freezeUrl = 'http://localhost:3000/userInfo/freeze'
         var resource = this.$resource(freezeUrl)
         resource.save(freezeUrl, this.freezeUserInfo)
           .then((response) => {
-            if (this.freezeUserInfo.isAble === '是') {
-              this.$message({
-                message: '冻结此用户成功！',
-                type: 'success'})
+            if (this.freezeUserInfo.isAble === '0') {
+              this.$Message.success('冻结此用户成功！')
             } else {
-              this.$message({
-                message: '解冻此用户成功！',
-                type: 'success'
-              })
+              this.$Message.success('解冻此用户成功！')
             }
             this.hideUserTip()
             this.getUserInfo()
           })
       },
-      hideUserTip: function () {
+      changePasswd () {
+        var passUrl = 'http://localhost:3000/userInfo/passwd'
+        var Params = this.updatePasswd
+        var resource = this.$resource(passUrl)
+        resource.save(passUrl, Params)
+          .then((response) => {
+            this.$Message.success('密码修改成功！')
+            this.passwdDialogClose()
+            this.updatePasswd = []
+          })
+      },
+      showUserDelTip (user) {
+        this.delClass.open = true
+        this.delUser = user
+        console.log(this.delUser.userid)
+      },
+      showUserFreezeTip (user) {
+        this.freezeClass.open = true
+        this.freezeUserInfo = user
+        console.log(this.freezeUserInfo)
+      },
+      hideUserTip () {
         this.delClass.open = false
         this.freezeClass.open = false
       },
-      pageOneChanged: function (pageNum) {
+      pageOneChanged (pageNum) {
         this.pageOne.currentPage = pageNum
-        this.usersShow = []
-        for (var i = (pageNum - 1) * this.selected; i < pageNum * this.selected && i < this.users.length; i++) {
-          this.usersShow.push(this.users[i])
+        this.ShowInfo = []
+        for (var i = (pageNum - 1) * this.selected; i < pageNum * this.selected && i < this.AllInfo.length; i++) {
+          if (this.AllInfo[i].isAble === '0') {
+            this.AllInfo[i].isAble = '是'
+          } else if (this.AllInfo[i].isAble === '1') {
+            this.AllInfo[i].isAble = '否'
+          }
+          this.ShowInfo.push(this.AllInfo[i])
         }
       },
       selectVal () {
         this.pageOne.itemsPerPage = this.selected
-        this.pageOne.totalPages = Math.ceil(this.users.length / this.selected)
+        this.pageOne.totalPages = Math.ceil(this.AllInfo.length / this.selected)
         console.log('-设置条数-')
-        this.usersShow = []
-        for (var i = 0; i < this.selected && i < this.users.length; i++) {
-          this.usersShow.push(this.users[i])
+        this.ShowInfo = []
+        for (var i = 0; i < this.selected && i < this.AllInfo.length; i++) {
+          this.ShowInfo.push(this.AllInfo[i])
         }
       },
-      setPagination (users) {
-        this.usersShow = []
-        this.pageOne.totalItems = users.length
-        this.pageOne.totalPages = Math.ceil(this.users.length / this.selected)
-        for (var i = 0; i < this.selected && i < this.users.length; i++) {
-          this.usersShow.push(this.users[i])
+      setPagination (AllInfo) {
+        this.ShowInfo = []
+        this.pageOne.totalItems = AllInfo.length
+        this.pageOne.totalPages = Math.ceil(this.AllInfo.length / this.selected)
+        for (var i = 0; i < this.selected && i < this.AllInfo.length; i++) {
+          this.ShowInfo.push(this.AllInfo[i])
+          if (this.ShowInfo[i].isAble === '0') {
+            this.ShowInfo[i].isAble = '是'
+          } else {
+            this.ShowInfo[i].isAble = '否'
+          }
         }
       },
       selectUser () {
-        var selectUrl = this.apiUrl + '/' + this.selectText
-        var vm = this
-        var resource = vm.$resource(selectUrl)
+        var selectUrl = 'http://localhost:3000/userInfo/select' + '/' + this.selectText
+        var resource = this.$resource(selectUrl)
         resource.get()
           .then((response) => {
-            console.log('我是返回的测试！')
-            console.log(response.body)
-            this.users = response.body
-            this.setPagination(this.users)
+            this.AllInfo = []
+            if (CookieUserType() === '2') {
+              for (var i = 0; i < response.body.length; i++) {
+                if (this.Cookie.userid === response.body[i].userid) {
+                  this.AllInfo.push(response.body[i])
+                }
+              }
+              this.setPagination(this.AllInfo)
+            } else {
+              console.log(response.body)
+              this.AllInfo = response.body
+              this.setPagination(this.AllInfo)
+            }
           })
           .catch(function (response) {
             console.log(response)
@@ -593,6 +717,58 @@
           .catch(function (response) {
             console.log(response)
           })
+      },
+      StatusSelectChange () {
+        this.tempSelect = this.selectedType
+      },
+      uploadImgShow (Info) {
+        this.upLoadShow = true
+        this.IdMake()
+      },
+      cropSuccess (imgDataUrl, field) {
+        this.imgDataUrl = imgDataUrl
+      },
+      cropUploadSuccess (jsonData, field) {
+        this.$Message.success('再次登入后生效！')
+      },
+      cropUploadFail (status, field) {
+        console.log('-------- upload fail --------')
+        console.log(status)
+        console.log('field: ' + field)
+      },
+      IdMake () {
+        var myDate = new Date()
+        var temp = this.Cookie.userid + '&'
+        temp += myDate.getFullYear()
+        temp += myDate.getMonth() + 1
+        temp += myDate.getDate()
+        temp += myDate.getHours()
+        temp += myDate.getMinutes()
+        temp += myDate.getSeconds()
+        this.imageId = temp
+      },
+      vueCookie () {
+        this.Dic = getCookie()
+        this.Cookie.userid = this.Dic['userid']
+      },
+      setUI () {
+        var type = CookieUserType()
+        var CookieTempUserType = Number(type)
+        if (CookieTempUserType === 1) {
+          this.updateIconShow = true
+          this.passwdIconShow = true
+          this.imageIconShow = false
+          this.freezeIconShow = true
+          this.deleteIconShow = true
+          this.addButtonShow = true
+        } else if (CookieTempUserType === 2) {
+          this.updateIconShow = true
+          this.passwdIconShow = true
+          this.imageIconShow = true
+          this.freezeIconShow = false
+          this.deleteIconShow = false
+          this.addButtonShow = false
+        }
       }
     }
   }
@@ -601,6 +777,23 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .dialog{
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 11;
+  }
+  .passwd{
+    padding-top: 145px;
+    overflow-y:scroll;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 11;
+  }
   .del{
     left: 0px;
     top: 0px;
@@ -608,5 +801,8 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 99;
+  }
+  .alarm{
+    color: rgba(255, 55, 24, 0.85)
   }
 </style>

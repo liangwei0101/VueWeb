@@ -73,7 +73,7 @@
               <div class="col-md-12">
                 <vue-editor
                   @save-content="handleSaveContent"
-                  :editor-content="htmlForEditor">
+                  v-model="htmlForEditor">
                 </vue-editor>
               </div>
             </div>
@@ -81,7 +81,7 @@
               <div class="col-md-12">
                 <button class="btn btn-danger" @click="isAbleDelContent"> <span class="fa fa-times"></span>删除</button>
                 <div class="pull-right">
-                  <button class="btn btn-success" @click="textIdMake"><span class="fa fa-envelope"></span> 保存</button>
+                  <button class="btn btn-success" @click="handleSaveContent"><span class="fa fa-check"></span> 保存</button>
                 </div>
               </div>
             </div>
@@ -118,7 +118,7 @@
   import Vue from 'vue'
   import VueResource from 'vue-resource'
   import { VueEditor } from 'vue2-editor'
-  import { getCookie } from '../services/Cookie'
+  import {getCookie, CookieUserType} from '../services/Cookie'
   Vue.use(VueResource)
   Vue.use(VueEditor)
 
@@ -131,18 +131,20 @@
         author: '',
         title: '',
         IsPublic: '',
-        createDateTime: '',
         selected: '0',
         options: [
           { text: '公开', value: '0' },
           { text: '私密', value: '1' }
         ],
         items: [],
-        textID: '',
+        id: '',
         delClass: {
           open: false
         },
-        Dic: {}
+        Cookie: {
+          userid: '',
+          name: ''
+        }
       }
     },
     components: {
@@ -154,11 +156,14 @@
       this.getDate()
     },
     methods: {
-      handleSaveContent: function (contentsToBeSaved) {
-        this.saveContents(contentsToBeSaved)
+      handleSaveContent: function () {
+        this.saveContents()
       },
-      getContents: function () {
-        var getUrl = 'http://localhost:3000/workText' + '/' + this.Dic['userid']
+      getContents () {
+        var getUrl = 'http://localhost:3000/workText/get'
+        if (CookieUserType() === '2') {
+          getUrl = 'http://localhost:3000/workText/get' + '/' + this.Cookie.userid
+        }
         var resource = this.$resource(getUrl)
         resource.get()
           .then((response) => {
@@ -175,150 +180,121 @@
             }
           })
       },
-      saveContents: function (contentsToBeSaved) {
+      saveContents () {
         var index = -1
-        var Params = {IsPublic: this.selected,
-          title: this.title,
-          author: this.author,
-          htmlForEditor: contentsToBeSaved,
-          createDateTime: this.createDate,
-          textID: this.textID
-        }
+        var Params = {id: this.id}
         for (var i = 0; i < this.items.length; i++) {
-          if (this.items[i].textID === Params.textID) {
+          if (this.items[i].id === Params.id) {
             index = i
           }
         }
         if (index === -1) {
-          this.addContent(contentsToBeSaved)
+          this.addContent()
         } else {
-          this.updateContent(contentsToBeSaved)
+          this.updateContent()
         }
       },
-      getDate: function () {
+      getDate () {
         var tempDate = new Date()
         this.createDate = tempDate.toLocaleDateString()
       },
-      getTime: function () {
+      getTime () {
         var tempDate = new Date()
         this.createTime = tempDate.getHours() + ':'
         this.createTime += tempDate.getMinutes()
       },
-      showContent: function (item) {
+      showContent (item) {
         console.log(item)
         this.title = item.title
-        this.createDate = item.createDateTime
+        this.createDate = item.createDate
         this.selected = item.IsPublic
         this.htmlForEditor = item.htmlForEditor
         this.author = item.author
-        this.textID = item.textID
+        this.id = item.id
       },
-      isAbleDelContent: function () {
-        if (this.textID === '') {
-          this.$message({
-            showClose: true,
-            message: '此为空文本，请先添加再按保存！',
-            type: 'warning'
-          })
+      isAbleDelContent () {
+        if (this.id === '') {
+          this.$Message.warning('此为空文本，请先添加再按保存！')
         } else {
           this.delClass.open = true
         }
       },
-      addContent: function (contentsToBeSaved) {
+      addContent () {
         this.textIdMake()
         this.getTime()
         var Params = {IsPublic: this.selected,
           title: this.title,
           author: this.author,
-          htmlForEditor: contentsToBeSaved,
+          htmlForEditor: this.htmlForEditor,
           createDate: this.createDate,
-          textID: this.textID,
+          id: this.id,
           userid: this.Dic['userid'],
           createTime: this.createTime
         }
-        var saveUrl = 'http://localhost:3000/workText'
+        var saveUrl = 'http://localhost:3000/workText/save'
         var resource = this.$resource(saveUrl)
         resource.save(saveUrl, Params)
           .then((response) => {
             this.items.push(Params)
-            this.$message({
-              message: '工作文档保存成功！',
-              type: 'success'
-            })
+            this.$Message.success('文档新增成功！')
             this.getContents()
           })
       },
-      updateContent: function (contentsToBeSaved) {
-        var updateUrl = 'http://localhost:3000/workText' + '/' + this.textID
+      updateContent () {
+        var updateUrl = 'http://localhost:3000/workText/update' + '/' + this.id
         var Params = {IsPublic: this.selected,
           title: this.title,
           author: this.author,
-          htmlForEditor: contentsToBeSaved,
-          textID: this.textID
+          htmlForEditor: this.htmlForEditor,
+          id: this.id
         }
         var resource = this.$resource(updateUrl)
         resource.save(updateUrl, Params)
           .then((response) => {
-            this.$message({
-              message: '工作文档更新成功！',
-              type: 'success'
-            })
+            this.$Message.success('文档更新成功！')
             this.getContents()
           })
       },
-      removeContent: function () {
+      removeContent () {
         this.closeTipWind()
-        var delUrl = 'http://localhost:3000/deleteWorkText'
+        var delUrl = 'http://localhost:3000/workText/remove'
         var Params = {IsPublic: this.selected,
           title: this.title,
           author: this.author,
-          textID: this.textID
-        }
-        var index = -1
-        for (var i = 0; i < this.items.length; i++) {
-          if (this.items[i].textID === Params.textID) {
-            index = i
-          }
+          id: this.id
         }
         var resource = this.$resource(delUrl)
         resource.save(delUrl, Params)
           .then((response) => {
-          //  删除左边栏的数据
-            this.items.splice(index, 1)
-            this.$message({
-              message: '工作文档删除成功！',
-              type: 'success'
-            })
-            this.clearContent()
+            this.$Message.success('工作文档删除成功！')
+            this.getContents()
           })
       },
-      clearContent: function () {
+      clearContent () {
         this.title = ''
         this.selected = '0'
         this.author = ''
         this.htmlForEditor = ''
-        this.textID = ''
+        this.id = ''
         this.getDate()
       },
-      closeTipWind: function () {
+      closeTipWind () {
         this.delClass.open = false
       },
-      textIdMake: function () {
+      textIdMake () {
         var myDate = new Date()
-        var temp = ''
+        var temp = this.Cookie.userid + '&'
         temp += myDate.getFullYear()
         temp += myDate.getMonth() + 1
         temp += myDate.getDate()
         temp += myDate.getHours()
         temp += myDate.getMinutes()
         temp += myDate.getSeconds()
-        this.textID = temp
+        this.id = temp
       },
-      vueCookie: function () {
+      vueCookie () {
         this.Dic = getCookie()
-        console.log('-------------------------')
-        console.log(this.Dic['userid'])
-        console.log('-------------------------')
+        this.Cookie.userid = this.Dic['userid']
       }
     }
   }

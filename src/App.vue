@@ -3,11 +3,9 @@
     <router-view></router-view>
   </div>-->
   <div class="page-container">
-
-    <!-- 右侧菜单栏 -->
-    <PageSidebar></PageSidebar>
-    <!-- 右侧菜单栏 -->
-
+      <!-- 右侧菜单栏 -->
+      <PageSidebar></PageSidebar>
+      <!-- 右侧菜单栏 -->
     <!--上方导航和内容-->
     <div class="page-content">
 
@@ -28,14 +26,17 @@
   import Navigation from './components/PublicPage/Navigation'
   import MessageBox from './components/PublicPage/MessageBox'
   import Vue from 'vue'
-  import Element from 'element-ui'
-  import 'element-ui/lib/theme-default/index.css'
-  Vue.use(Element)
+  import iView from 'iview'
+  import 'iview/dist/styles/iview.css'    // 使用 CSS
+  import store from './services/store' // import 刚创建的 store
+  Vue.use(iView)
 
   export default {
     components: { PageSidebar, Navigation, MessageBox },
-    name: 'app'
+    name: 'app',
+    store: store
 }
+
 </script>
 
 <style>

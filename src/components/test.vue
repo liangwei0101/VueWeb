@@ -1,96 +1,111 @@
 <template>
+  <div>
+    <!-- START BREADCRUMB -->
+    <ul class="breadcrumb" style="text-align:left;">
+      <li><a href="#">主页</a></li>
+      <li><a href="#">管理员</a></li>
+      <li class="active">用户管理</li>
+    </ul>
+    <!-- END BREADCRUMB -->
 
-    <form @submit.prevent="validateForm('form-1')" data-vv-scope="form-1">
-      <legend>Form 1</legend>
-
-
-          <input name="email" v-validate="'required|email'" :class="{'input': true, 'is-danger': errors.has('form-1.email') }" type="text" placeholder="Email">
-          <div>
-          <i v-show="errors.has('form-1.email')" class="fa fa-warning"></i>
-          <span v-show="errors.has('form-1.email')" class="help is-danger">{{ errors.first('form-1.email') }}</span>
-          </div>
-
-      <div class="column is-12">
-        <p class="control">
-          <button class="button is-primary" type="submit" name="button">Sign up</button>
-          <button class="button is-danger" type="button" name="button" @click="errors.clear('form-1')">Clear</button>
-        </p>
+    <!-- START CONTENT FRAME -->
+    <div class="content-frame">
+      <!-- START CONTENT FRAME TOP -->
+      <div class="content-frame-top">
+        <div class="page-title">
+          <h2><span class="fa fa-pencil"></span> 公文管理</h2>
+        </div>
       </div>
-    </form>
+      <!-- END CONTENT FRAME TOP -->
+    </div>
+
+    <div>
+      <p>侧是是是 </p>
+      <p>{{this.$store.state.Info.imgUrl}}</p>
+    </div>
+  </div>
 </template>
 
 <script>
-  import Vue from 'vue'
-  import VueResource from 'vue-resource'
-  import { getCookie } from '../services/Cookie'
-  import VeeValidate, { Validator } from 'vee-validate'
-  import messages from '../assets/js/zh_CN'
-  Validator.updateDictionary({
-    zh_CN: {
-      messages
-    }
-  })
-  const config = {
-    errorBagName: 'errors', // change if property conflicts.
-    delay: 0,
-    locale: 'zh_CN',
-    messages: null,
-    strict: true
-  }
-  Vue.use(VueResource)
-  Vue.use(VeeValidate, config)
+  import myUpload from 'vue-image-crop-upload/upload-2.vue'
+  import { mapState } from 'vuex'
+  import Panel from '../../node_modules/iview/src/components/collapse/panel'
 
   export default {
-    data: function () {
+    components: {
+      Panel,
+      'my-upload': myUpload
+    },
+    data () {
       return {
+        show: true,
+        params: {
+          token: '123456798',
+          name: 'avatar'
+        },
+        headers: {
+          smail: '*_~'
+        },
+        imgDataUrl: '',  // the datebase64 url of created image
+        UserImg: 'static/img/users/user8.jpg',
         addIsAbleShowClass: {
           modal: false,
           fade: false
-        },
-        addContent: {
-          id: '',
-          userid: '',
-          name: '',
-          place: '',
-          principal: '',
-          RadiationType: '',
-          EnergyRes: '',
-          DoseEquivalent: '',
-          DoseEquivalentRate: '',
-          remark: ''
         }
       }
     },
+    fetch ({ store }) {
+      store.commit('increment')
+    },
+    computed: mapState([
+      'counter'
+    ]),
     mounted: function () {
-      this.vueCookie()
     },
     methods: {
-      addDialogShow: function () {
-        this.isAbleShowClass.modal = false
-        this.isAbleShowClass.fade = false
+      test () {
+        console.log(this.$store.state.Info)
       },
-      addDialogClose: function () {
-        this.isAbleShowClass.modal = true
-        this.isAbleShowClass.fade = true
+      toggleShow () {
+        this.show = !this.show
       },
-      vueCookie: function () {
-        this.Dic = getCookie()
-        console.log('-------------------------')
-        console.log(this.Dic['userid'])
-        console.log('------------------------')
+      /**
+       * crop success
+       *
+       * [param] imgDataUrl
+       * [param] field
+       */
+      cropSuccess (imgDataUrl, field) {
+        console.log('-------- crop success --------')
+        this.imgDataUrl = imgDataUrl
       },
-      validateForm (scope) {
-        this.$validator.validateAll(scope).then(result => {
-          if (result) {
-            // eslint-disable-next-line
-            alert('Form Submitted!');
-          }
-        })
+      /**
+       * upload success
+       *
+       * [param] jsonData  server api return data, already json encode
+       * [param] field
+       */
+      cropUploadSuccess (jsonData, field) {
+        console.log('-------- upload success --------')
+        console.log(jsonData)
+        console.log('field: ' + field)
+      },
+      /**
+       * upload fail
+       *
+       * [param] status    server api return error status, like 500
+       * [param] field
+       */
+      cropUploadFail (status, field) {
+        console.log('-------- upload fail --------')
+        console.log(status)
+        console.log('field: ' + field)
       }
     }
   }
+
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+
+<style>
 
 </style>

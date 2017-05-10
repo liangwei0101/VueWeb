@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
-import PublicPage from '@/components/PublicPage'
 import SendMailer from '@/components/SendMailer'
 import UserManage from '@/components/userManage'
 import test from '@/components/test'
@@ -11,6 +10,10 @@ import Login from '@/components/Login'
 import ShowWorkText from '@/components/ShowWorkText'
 import RadioactiveInfo from '@/components/RadioactiveInfo'
 import TransportTask from '@/components/TransportTask'
+import Video from '@/components/Video'
+import CarManage from '@/components/CarManage'
+import test1 from '@/components/test1'
+import roleManage from '@/components/roleManage'
 
 Vue.use(Router)
 
@@ -20,11 +23,6 @@ export default new Router({
       path: '/hello',
       name: 'Hello',
       component: Hello
-    },
-    {
-      path: '/PublicPage',
-      name: 'PublicPage',
-      component: PublicPage
     },
     {
       path: '/SendMailer',
@@ -52,7 +50,7 @@ export default new Router({
       component: map
     },
     {
-      path: '/',
+      path: '/Login',
       name: 'Login',
       component: Login
     },
@@ -70,6 +68,26 @@ export default new Router({
       path: '/TransportTask',
       name: 'TransportTask',
       component: TransportTask
+    },
+    {
+      path: '/Video',
+      name: 'Video',
+      component: Video
+    },
+    {
+      path: '/CarManage',
+      name: 'CarManage',
+      component: CarManage
+    },
+    {
+      path: '/test1',
+      name: 'test1',
+      component: test1
+    },
+    {
+      path: '/roleManage',
+      name: 'roleManage',
+      component: roleManage
     }
   ]
 })

@@ -2,8 +2,7 @@
   <div class="hello">
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb" style="text-align:left;">
-      <li><a href="#">主页</a></li>
-      <li><a href="#">管理员</a></li>
+      <li><a>用户</a></li>
       <li class="active">邮件样式</li>
     </ul>
     <!-- END BREADCRUMB -->
@@ -130,7 +129,7 @@
                       </div>
                       <i v-show="errors.has('授权码')" class="fa fa-hand-o-right alarm"></i>
                       <span v-show="errors.has('授权码')" class="help is-danger alarm">{{ errors.first('授权码') }}</span>
-                      <span class="help-block">请自行到相应邮箱官网自行获取</span>
+                      <span class="help-block">请自行到QQ邮箱官网自行获取</span>
                     </div>
                   </div>
 
@@ -182,8 +181,7 @@
           alarmText: '',
           emailNumber: '',
           emailPasswd: ''
-        },
-        emailUrl: 'http://localhost:3000/emailStyle'
+        }
       }
     },
     mounted: function () {
@@ -191,28 +189,21 @@
     },
     methods: {
       getMailStyle: function () {
-        var resource = this.$resource(this.emailUrl)
+        var getUrl = 'http://localhost:3000/emailStyle/get'
+        var resource = this.$resource(getUrl)
         resource.get()
           .then((response) => {
             this.emailStyle = response.body
           })
       },
       saveMailStyle: function () {
-        var Params = {regSubject: this.emailStyle.regSubject,
-          regText: this.emailStyle.regText,
-          alarmSubject: this.emailStyle.alarmSubject,
-          alarmText: this.emailStyle.alarmText,
-          emailNumber: this.emailStyle.emailNumber,
-          emailPasswd: this.emailStyle.emailPasswd
-        }
-        var resource = this.$resource(this.emailUrl)
-        resource.save(this.emailUrl, Params)
+        var saveUrl = 'http://localhost:3000/emailStyle/save'
+        var Params = this.emailStyle
+        var resource = this.$resource(saveUrl)
+        resource.save(saveUrl, Params)
           .then((response) => {
+            this.$Message.success('邮件样式保存成功！')
             this.getMailStyle()
-            this.$message({
-              message: '邮件样式保存成功！',
-              type: 'success'
-            })
           })
       },
       validateBeforeSubmit (e) {
@@ -222,7 +213,6 @@
         }
       },
       submitForm () {
-        alert('11212122')
         this.saveMailStyle()
       }
     }

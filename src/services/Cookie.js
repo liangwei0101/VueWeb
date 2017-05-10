@@ -23,3 +23,30 @@ export function getCookie () {
     return dic
   }
 }
+
+export function CookieUserType () {
+  var cookieTemp = Vue.cookie.get('userInfo')
+  var temp = cookieTemp.split('&')
+  var Str = temp[temp.length - 1]
+  var tempUerType = Str.split('=')
+  var UerType = tempUerType[tempUerType.length - 1]
+  return UerType
+}
+
+export function CookieImgUrl () {
+  var cookieTemp = Vue.cookie.get('userInfo')
+  var temp = cookieTemp.split('&')
+  var Str = temp[3]
+  var ImgUrl = Str.split('=')
+  var tempImgUrl = ImgUrl[ImgUrl.length - 1]
+  return tempImgUrl
+}
+
+export function CookieName () {
+  var cookieTemp = Vue.cookie.get('userInfo')
+  var temp = cookieTemp.split('&')
+  var Str = temp[1]
+  var name = Str.split('=')
+  var tempName = name[name.length - 1]
+  return tempName
+}

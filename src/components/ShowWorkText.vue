@@ -11,84 +11,31 @@
     <!-- PAGE CONTENT WRAPPER -->
     <div class="page-content-wrap">
 
+      <!-- START CONTENT FRAME TOP -->
+      <div class="content-frame-top">
+        <div class="page-title">
+          <h2><span class="fa fa-file-text-o"></span> 文章查看</h2>
+        </div>
+      </div>
+      <!-- END CONTENT FRAME TOP -->
+
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-">
 
           <!-- START TIMELINE FILTER -->
           <div class="panel panel-default">
             <div class="panel-body">
-              <h3>Timeline filter</h3>
-              <form class="form-horizontal" role="form">
-                <div class="form-group">
-
-                  <div class="col-md-8">
-                    <div class="input-group">
-                      <span class="input-group-addon"><span class="fa fa-search"></span></span>
-                      <input type="text" class="form-control" placeholder="Keywords"/>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="input-group">
-                      <span class="input-group-addon add-on"><span class="fa fa-calendar"></span></span>
-                      <input type="text" class="form-control datepicker" value="2014-10-06"/>
-                    </div>
-                  </div>
-
-                </div>
-                <div class="form-group">
-                  <div class="col-md-8">
-                    <div class="btn-group btn-group-justified">
-                      <a href="#" class="btn btn-primary active">All</a>
-                      <a href="#" class="btn btn-primary">Year</a>
-                      <a href="#" class="btn btn-primary">Month</a>
-                      <a href="#" class="btn btn-primary">Week</a>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="pull-right">
-                      <button class="btn btn-success"><span class="fa fa-refresh"></span> UPDATE</button>
-                    </div>
-                  </div>
-                </div>
-              </form>
+              <h3 class="panel-title col-md-5">
+                <input v-model="selectText" class="form-control" @keyup.enter="selectInfo" placeholder="请输入发表者姓名查询"/>
+              </h3>
+              <div class="btn-group " style="float: left">
+                <button class="btn btn-info" @click="selectInfo"><i class="glyphicon glyphicon-zoom-out"></i>查 询</button>
+              </div>
             </div>
           </div>
-          <!-- END TIMELINE FILTER -->
 
         </div>
-        <div class="col-md-6">
 
-          <!-- START NEW RECORD -->
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <h3>What happened?</h3>
-              <form class="form-horizontal" role="form">
-                <div class="form-group">
-                  <div class="col-md-12">
-                    <div class="input-group">
-                      <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
-                      <input class="form-control" placeholder="Write something"/>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="col-md-12">
-                    <div class="btn-group pull-left">
-                      <button class="btn btn-primary"><span class="fa fa-camera"></span></button>
-                      <button class="btn btn-primary"><span class="fa fa-map-marker"></span></button>
-                      <button class="btn btn-primary"><span class="fa fa-calendar"></span></button>
-                    </div>
-                    <div class="pull-right">
-                      <button class="btn btn-danger"><span class="fa fa-share"></span> SEND</button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-          <!-- END NEW RECORD -->
-
-        </div>
       </div>
 
       <div class="row">
@@ -99,7 +46,7 @@
 
             <!-- START TIMELINE ITEM -->
             <div class="timeline-item timeline-main">
-              <div class="timeline-date">2014</div>
+              <div class="timeline-date">Begin</div>
             </div>
             <!-- END TIMELINE ITEM -->
 
@@ -109,8 +56,10 @@
               <div class="timeline-item-icon"><span class="fa fa-globe"></span></div>
               <div class="timeline-item-content">
                 <div class="timeline-heading">
+                  <img v-bind:src='item.imgUrl' />
                   <a>{{item.author}}</a> 发表于 <a>{{item.createTime}}</a>
                 </div>
+                <strong>&nbsp;&nbsp;&nbsp;标题：{{item.title}}</strong>
                 <div class="timeline-body">
                   <p v-html="item.htmlForEditor">{{item.htmlForEditor}}</p>
 
@@ -123,7 +72,7 @@
                 </div>
                 <div class="timeline-body comments">
                   <div class="comment-item">
-                    <img src="assets/images/users/user4.jpg"/>
+                    <img v-bind:src='item.imgUrl' />
                     <p class="comment-head">
                       <a href="#">Brad Pitt</a> <span class="text-muted">@bradpitt</span>
                     </p>
@@ -147,7 +96,7 @@
 
             <!-- START TIMELINE ITEM -->
             <div class="timeline-item timeline-main">
-              <div class="timeline-date"><a href="#"><span class="fa fa-ellipsis-h"></span></a></div>
+              <div class="timeline-date">End</div>
             </div>
             <!-- END TIMELINE ITEM -->
           </div>
@@ -164,7 +113,7 @@
 <script>
   import Vue from 'vue'
   import VueResource from 'vue-resource'
-  import { getCookie } from '../services/Cookie'
+  import {getCookie, CookieUserType} from '../services/Cookie'
   Vue.use(VueResource)
 
   export default {
@@ -187,7 +136,8 @@
         delClass: {
           open: false
         },
-        Dic: {}
+        Dic: {},
+        selectText: ''
       }
     },
     mounted: function () {
@@ -199,12 +149,51 @@
         this.saveContents(contentsToBeSaved)
       },
       getContents: function () {
-        var getUrl = 'http://localhost:3000/workText'
+        var getUrl = 'http://localhost:3000/workText/get'
         var resource = this.$resource(getUrl)
+        resource.get()
+          .then((response) => {
+            console.log(CookieUserType())
+            if (CookieUserType() === '2') {
+              for (var i = 0; i < response.body.length; i++) {
+                if (response.body[i].IsPublic === '0') {
+                  this.items.push(response.body[i])
+                  this.items.reverse()
+                }
+              }
+            } else {
+              this.items = response.body
+              this.items.reverse()
+            }
+          })
+      },
+      selectInfo: function () {
+        this.items = []
+        var selectUrl = 'http://localhost:3000/workText/select' + '/'
+        if (this.selectText === '') {
+          selectUrl += this.Dic['userid']
+        } else {
+          selectUrl += this.selectText
+        }
+        var resource = this.$resource(selectUrl)
         resource.get()
           .then((response) => {
             this.items = response.body
             this.items.reverse()
+
+            this.items = []
+            if (CookieUserType() === '2') {
+              for (var i = 0; i < response.body.length; i++) {
+                if (this.Cookie.userid === response.body[i].userid) {
+                  this.items.push(response.body[i])
+                }
+              }
+              this.items.reverse()
+            } else {
+              console.log(response.body)
+              this.items = response.body
+              this.items.reverse()
+            }
           })
       },
       showContent: function (item) {

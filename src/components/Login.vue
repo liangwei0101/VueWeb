@@ -47,6 +47,8 @@
   import Vue from 'vue'
   import VueResource from 'vue-resource'
   import VueCookie from 'vue-cookie'
+  import { mapState } from 'vuex'
+  import {setFlag} from '../services/test'
   Vue.use(VueResource)
   Vue.use(VueCookie)
 
@@ -55,41 +57,62 @@
       return {
         userid: '',
         password: '',
-        LoginUrl: 'http://localhost:3000/login'
+        LoginUrl: 'http://localhost:3000/login',
+        userInfo: {}
       }
     },
+    // fetch(context) is called by the server-side
+    // and nuxt before instantiating the component
+    fetch ({ store }) {
+      store.commit('set_userInfo')
+    },
+    computed: mapState([
+      'Info'
+    ]),
     methods: {
       submitForm () {
+        this.clear()
+        console.log(this.$store.state)
         var Params = {userid: this.userid,
           pass: this.password
         }
         var resource = this.$resource(this.LoginUrl)
         resource.save(this.apiUrl, Params)
           .then((response) => {
+            console.log(response.body)
             if (response.body === '301') {
-              this.$notify.info({
-                title: '错误',
-                message: '没有该用户,请输入正确的用户名！'
+              this.$Notice.warning({
+                title: '没有该用户,请输入正确的用户名!'
               })
             } else if (response.body === '302') {
-              this.$notify.error({
-                title: '警告',
-                message: '密码与相应账户不符！'
+              this.$Notice.error({
+                title: '密码与相应账户不符!'
+              })
+            } else if (response.body === '303') {
+              this.$Notice.error({
+                title: '该账号已被冻结，请联系管理员!'
               })
             } else {
-              this.$notify({
-                title: '成功',
-                message: '您已成功登入！',
-                type: 'success'
+              this.$Notice.success({
+                title: '您已成功登入!'
               })
+              this.userInfo = response.body
               var Info = 'userid' + '=' + response.body.userid + '&'
               Info += 'name' + '=' + response.body.name + '&'
               Info += 'email' + '=' + response.body.email
               Vue.cookie.set('userInfo', Info, { expires: '1D' })
+              this.setUI(this.userInfo)
+              setFlag(response.body.test)
               this.$router.push('/PublicPage')
             }
           })
-        this.$router.push('/PublicPage')
+      },
+      setUI (Obj) {
+        this.$store.commit('set_userInfo', Obj)
+        this.$store.commit('set_tets')
+      },
+      clear () {
+        this.$store.commit('clear_state')
       }
     }
   }
